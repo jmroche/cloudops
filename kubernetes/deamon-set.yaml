@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: data-cleaner
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      name: busybox
+  template:
+    metadata:
+      labels:
+        name: busybox
+
+    spec:
+      containers:
+      - name: busybox
+        image: busybox:1.27
+        command: ['sh', '-c', 'while true; do rm -rf /beebox-temp/*; sleep 60; done']
+        volumeMounts:
+        - name: beebox-tmp
+          mountPath: /beebox-temp
+      volumes:
+      - name: beebox-tmp
+        hostPath:
+          path: /etc/beebox/tmp

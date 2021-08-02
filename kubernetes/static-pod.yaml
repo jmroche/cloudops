@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: beebox-diagnostic
+  labels:
+    name: beebox-diagnostic
+spec:
+  containers:
+  - name: beebox-diagnostic
+    image: acgorg/beebox-diagnostic:1

@@ -1,0 +1,8 @@
+aws_cdk.aws_sns
+aws_cdk.aws_ec2
+aws_cdk.aws_ecs
+aws_cdk.aws_ecs_patterns
+aws_cdk.aws_ecr
+aws_cdk.aws_applicationautoscaling
+aws_cdk.aws_sns_subscriptions
+aws_cdk.aws_ssm
