@@ -1,0 +1,47 @@
+--- 
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: localdisk
+provisioner: kubernetes.io/no-provisioner
+allowVolumeExpansion: true
+
+--- 
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: host-pv
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  storageClassName: localdisk
+  hostPath:
+    path: /var/output
+  # mountOptions:
+  #   - hard
+  #   - nfsvers=4.1
+  # nfs:
+  #   path: /tmp
+  #   server: 172.17.0.2
+
+--- 
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: host-pvc
+spec:
+  storageClassName: localdisk
+  resources:
+    requests:
+      storage: 100Mi
+  # volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+
+
