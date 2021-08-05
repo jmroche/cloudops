@@ -1,5 +1,5 @@
 
-# Welcome to New Jersey's DMV Out Ff State License Appointment finder!
+# Welcome to New Jersey's DMV Out Of State License Appointment finder!
 
 This project will scrape the New Jersey's DMV License site and look for appointments to perform an out of state license transfer. 
 Once an appointment is found the subscribed user will receive an email with the details and link to book the appointment.
