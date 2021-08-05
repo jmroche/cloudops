@@ -14,7 +14,7 @@ NJ_URL = "https://telegov.njportal.com/njmvc/AppointmentWizard/7"
 # This is the id of th element containing the appoitnment information for North Bergen
 # If another city needs to be sselected lookup their id
 # For example. Bayonne, NJ, the Id of the span element would be: dateText477
-id_for_north_bergen= "dateText577"
+nj_city_id= "dateText577"
 CITY = "North Bergen"
 
 
@@ -84,7 +84,7 @@ driver.implicitly_wait(30)
 driver.get(NJ_URL)
 
 # Search for the element containign the appointments for North Bergen
-search_appointments = driver.find_element_by_id(id_for_north_bergen).text
+search_appointments = driver.find_element_by_id(nj_city_id).text
 
 # Convert string to List and get first element
 number_apps_available = search_appointments.split(" ")[0]
