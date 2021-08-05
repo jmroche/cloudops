@@ -32,4 +32,6 @@ RUN pip install --upgrade pip
 
 RUN pip install -r requirements.txt
 
+RUN apt-get dist-upgrade -yqq
+
 CMD ["python", "./main.py"]

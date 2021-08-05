@@ -22,7 +22,7 @@ class CdkStack(cdk.Stack):
     def __init__(self, scope: cdk.Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        # Create a VPC construct
+        # Create a VPC construct with AZs for private Fargte and public for 1 Nat Gateway
         vpc = ec2.Vpc(self, "FargateVPC", max_azs=3, enable_dns_hostnames=True, enable_dns_support=True, nat_gateways=1)
 
 
@@ -33,8 +33,10 @@ class CdkStack(cdk.Stack):
         topic_name="nj-dmv-scraper-email-topic")
 
         # SNS Topic subscription for an email to receive the push notifications
+        # email address is setup in the context inside cdk.json.
+        # Additionally could be passed as a flag: cdk synth -c email_address=value
         sns_topic.add_subscription(subs.EmailSubscription(
-            email_address="josemroche@gmail.com"))
+            email_address=self.node.try_get_context("email_address")))
 
 
         # Create an ECS Cluster
@@ -52,6 +54,7 @@ class CdkStack(cdk.Stack):
         # )
 
         # Create a scheduled Fargate task that will run every 10 minutes
+        # It builds the image from the Docker file in the src directory
         task = ecs_patterns.ScheduledFargateTask(self,
             "ScheduledFargateService",
             cluster=ecs_cluster,
@@ -64,7 +67,7 @@ class CdkStack(cdk.Stack):
                 environment=["FARGATE"]),
             schedule=applicationautoscaling.Schedule.cron(minute="0/10"))
 
-        # Allow the ECS task to publish to this topic
+        # Allow the ECS task to publish to the sns topic
         sns_topic.grant_publish(task.task_definition.task_role)
 
 
