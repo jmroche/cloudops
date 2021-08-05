@@ -4,27 +4,34 @@ Out of state license transfer and let me know once it founds one available and t
 """
 
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
-import requests
-from bs4 import BeautifulSoup
 import sys
 import boto3
 import os
 
-
+# Link to the NJ DMV out of state license transfer site 
 NJ_URL = "https://telegov.njportal.com/njmvc/AppointmentWizard/7"
-id_out_of_state= "dateText577"
+# This is the id of th element containing the appoitnment information for North Bergen
+# If another city needs to be sselected lookup their id
+# For example. Bayonne, NJ, the Id of the span element would be: dateText477
+id_for_north_bergen= "dateText577"
+CITY = "North Bergen"
 
 
 # ************** TEST SITE WITH AVAILABLE APPOINTMENTS **************
 test_url = "https://telegov.njportal.com/njmvc/AppointmentWizard/6"
 test_id = "dateText76"
+# ************** TEST SITE WITH AVAILABLE APPOINTMENTS **************
 
 
 
 def send_sns_message(message:str):
     """
+    Function to send appoitnment information with AWS SNS service.
+    First it will getthe topic name from SSM Parameter store and 
+    then publish the message. The Parameter is created from the CDK project,
+    where the topic and subscription is created. Subscription email needs
+    to be modified there.
     """
     # running_on_fargate = os.getenv("0")
 
@@ -47,6 +54,10 @@ def send_sns_message(message:str):
 print(f"Environment Variable: {os.getenv('0')}")
 
 # Check in what platform we are running
+# The Docker environment installs the driver for Linux,
+# but I'm using the drivers added here, in order to use it
+# and test on deffierent OS. 
+# This could be optimized and reduced image size if only will run on Linux env.
 os = sys.platform
 
 if os == "darwin":
@@ -73,7 +84,7 @@ driver.implicitly_wait(30)
 driver.get(NJ_URL)
 
 # Search for the element containign the appointments for North Bergen
-search_appointments = driver.find_element_by_id(id_out_of_state).text
+search_appointments = driver.find_element_by_id(id_for_north_bergen).text
 
 # Convert string to List and get first element
 number_apps_available = search_appointments.split(" ")[0]
@@ -84,7 +95,7 @@ number_apps_available = search_appointments.split(" ")[0]
 if number_apps_available != "No":
     number_apps_available = int(number_apps_available)
     apps_split = search_appointments.replace("\n", " ").split(" ")[3::]
-    message = f"{number_apps_available} appointments found in North Bergen!\n {''.join(apps_split)}\nHere's the link to book: https://telegov.njportal.com/njmvc/AppointmentWizard/7/57"
+    message = f"{number_apps_available} appointments found in {CITY}!\n{''.join(apps_split)}\nHere's the link to book: https://telegov.njportal.com/njmvc/AppointmentWizard/7/57"
     send_sns_message(message=message)
     # print(f"{number_apps_available} appointments found in North Bergen!")
     # print(" ".join(apps_split))
@@ -93,7 +104,7 @@ if number_apps_available != "No":
 else:
     print("No appoitnments available at this time")
 
-print(number_apps_available)
+# print(number_apps_available)
 
 driver.close()
 
