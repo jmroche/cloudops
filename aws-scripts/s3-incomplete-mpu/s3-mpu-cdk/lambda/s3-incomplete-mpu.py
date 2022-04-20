@@ -4,10 +4,12 @@ Blog: https://aws.amazon.com/blogs/aws-cloud-financial-management/discovering-an
 """
 
 import boto3
+import logging
 from botocore.exceptions import ClientError
 
 
 s3_client = boto3.client("s3")
+logging.basicConfig(format='%(asctime)s: %(message)s', level=logging.DEBUG)
 
 
 def handler(event, context):
@@ -100,5 +102,20 @@ def handler(event, context):
                         print(f"Not changing bucket {bucket}. Running in DRY RUN Mode")
 
     bucket_name = event["detail"]["requestParameters"].get("bucketName")
+    event_time = event["detail"]["eventTime"]
+    event_region = event["detail"]["awsRegion"]
+    user_arn = event["detail"]["userIdentity"]["arn"]
+    user_name = event["detail"]["userIdentity"]["userName"]
+
+    # Log that we received a creation event, so we can track it in CloudWatch Logs
+
+    logging.info(
+        {
+        "bucket_name": bucket_name,
+        "creation_time": event_time,
+        "bucket_region": event_region,
+        "bucket_creator_arn": user_arn,
+        "bucket_creator_name": user_name
+    })
 
     get_incomplete_mpu_policy(bucket=bucket_name)
