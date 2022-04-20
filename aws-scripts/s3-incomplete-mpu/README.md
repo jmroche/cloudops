@@ -114,12 +114,12 @@ def get_incomplete_mpu_policy(bucket: str):
 
 ```
 try:
-        bucket_lifecycle = s3_client.get_bucket_lifecycle_configuration(
-            Bucket=bucket
-        )
-    except ClientError:
-        # This means there are no lifecycle rules for the bucket. Create one
-        print(f"No Incomplete MPU rule exist for this bucket: {bucket}...Adding one")
+    bucket_lifecycle = s3_client.get_bucket_lifecycle_configuration(
+        Bucket=bucket
+    )
+except ClientError:
+    # This means there are no lifecycle rules for the bucket. Create one
+    print(f"No Incomplete MPU rule exist for this bucket: {bucket}...Adding one")
 ```
 
 * If we get a ```ClientError``` then we know there are no lifecycle rules created. Next we check if we are running in dry mode or not. We do this by configuring a global variable as a [configuration toggle.](https://martinfowler.com/articles/feature-toggles.html)At the start of the script we declared the toggle as follows:
@@ -133,13 +133,13 @@ Setting ```DRY_RUN``` as ```True``` means we will perform all the checks, but wi
 
 ```
 if not DRY_RUN:
-            response = create_incomplete_mpu_policy(bucket=bucket)
+    response = create_incomplete_mpu_policy(bucket=bucket)
 
-            # If there's a response, the rule was created
-            if response is not None:
-                print(f"Lifecycle created for bucket {bucket}: \n{response}")
-        else:
-            print("No changes done...Running in Dry run mode")
+    # If there's a response, the rule was created
+    if response is not None:
+        print(f"Lifecycle created for bucket {bucket}: \n{response}")
+else:
+    print("No changes done...Running in Dry run mode")
 ```
 
 Here , if ```DRY_RUN``` is ```False``` we call the ```create_incomplete_mpu_policy()``` passing the ```bucket``` as the argument. We'll look at this function in a bit, but for now just know it will return the results of applying the lifecycle rule. Therefore, we check if this response is empty or not, and if not empty, the rule was created and we print the the response.
@@ -158,21 +158,21 @@ This is a list of dictionaries (each dictionary being a rule). We iterate throug
 
 ```
 else:
-        print(f"Bucket {bucket} has already created Lifecycle Rules: \nChecking if there is an Incomplete MPU rule in place...")
+    print(f"Bucket {bucket} has already created Lifecycle Rules: \nChecking if there is an Incomplete MPU rule in place...")
 
-        # Go through all the lifecycle rules configured in the bucket
-        for rule in bucket_lifecycle["Rules"]:
+    # Go through all the lifecycle rules configured in the bucket
+    for rule in bucket_lifecycle["Rules"]:
 
-            if rule.get("AbortIncompleteMultipartUpload"):
-                print(f"The following Incomplete MPU rule already exist: {rule['ID']}. Nothing to do.")
-            else:
-                print(f"No Incomplete MPU rule exist for this bucket: {bucket}...Adding one")
+    if rule.get("AbortIncompleteMultipartUpload"):
+        print(f"The following Incomplete MPU rule already exist: {rule['ID']}. Nothing to do.")
+    else:
+        print(f"No Incomplete MPU rule exist for this bucket: {bucket}...Adding one")
 
-                if not DRY_RUN:
-                    response = create_incomplete_mpu_policy(bucket=bucket)
-                    print(f"Incomplete MPU Lifecycle rule created for bucket {bucket}: \n{response}")
-                else:
-                    print(f"Not changing bucket {bucket}. Running in DRY RUN Mode")
+        if not DRY_RUN:
+            response = create_incomplete_mpu_policy(bucket=bucket)
+            print(f"Incomplete MPU Lifecycle rule created for bucket {bucket}: \n{response}")
+        else:
+            print(f"Not changing bucket {bucket}. Running in DRY RUN Mode")
 ```
 
 * As mentioned a few times already, we apply this rule to the bucket by calling the ```create_incomplete_mpu_policy()``` function and passing the bucket we want to update as an argument. First, let's  take a look at the rule we want to apply:
