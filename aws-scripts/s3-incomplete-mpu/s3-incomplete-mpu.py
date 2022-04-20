@@ -37,7 +37,7 @@ def create_incomplete_mpu_policy(bucket: str) -> dict:
         bucket (str): The name of the bucket to apply the configuration onto.
 
     Returns: 
-        response: Dictionary containing the information of the Lifecycle Rule created.
+        response (dict): Dictionary containing the information of the Lifecycle Rule created.
     """
 
     response = s3_client.put_bucket_lifecycle_configuration(

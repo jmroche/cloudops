@@ -15,7 +15,7 @@ s3_client = boto3.client("s3")
 
 The [S3 Client Class](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3.html#client) is a low-level representation of Amazon S3. The S3 client has a method called [list_buckets()](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3.html#S3.Client.list_buckets) that will return a dictionary with a list of all the buckets in that account. The Buckets dictionary within the response object contains this list of buckets. 
 
-For this example we are only interested in the bucket name, as that's the only required argument we need to add a lifecycle poilcy to an object. Therefore, we save the response of the list_buckets() in a list object as follows:
+For this example we are only interested in the bucket name, as that's the only required argument we need to add a lifecycle policy to an object. We save the response of the list_buckets() in a list object as follows:
 
 
 ```
@@ -35,9 +35,9 @@ for bucket_name in buckets:
 ```
 
 
-The get_incomplete_mpu_policy() function is pretty simple. It will take the bucket name as it's parameter and will check if this bucket has lifecycle policy rules in place. If there are no lifecycle rules in place, then it will call the create_incomplete_mpu_policy() function to create one. If there are lifecycle rules already present, then it will check if any of these rules have a explicit inclomplete mpu rule in place. If it finds there is an incomplete mpu rule, then it will just exit the function, and if there are none, then call the create_incomplete_mpu_policy() to create one.
+The ```get_incomplete_mpu_policy()``` function is pretty simple. It will take the bucket name as it's parameter and will check if this bucket has lifecycle policy rules in place. If there are no lifecycle rules in place, then it will call the ```create_incomplete_mpu_policy()``` function to create one. If there are lifecycle rules already present, then it will check if any of these rules have a explicit inclomplete mpu rule in place. If it finds there is an incomplete mpu rule, then it will just exit the function, and if there are none, then call the ```create_incomplete_mpu_policy()``` to create one.
 
-This is just a simple implementation to demonstrate an idea. It's probably not the most efficient way, nor the most [pythonic](https://docs.python-guide.org/writing/style/) way. For example, I probably should be using the [logging](https://docs.python.org/3/howto/logging.html#logging-howto) package to handle the output of the different checks to enhance observability by having well defined logs and outputs, among other things. I will probably update this script in the future, but for now, [printing](https://docs.python.org/3/library/functions.html#print) to [stdout](https://en.wikipedia.org/wiki/Standard_streams) should be enough to demonstrate the idea. 
+This is just a simple implementation to demonstrate an idea. It's probably not the most efficient, nor the most [pythonic](https://docs.python-guide.org/writing/style/) way. For example, I probably could be using the [logging](https://docs.python.org/3/howto/logging.html#logging-howto) package to handle the output of the different checks to enhance observability by having well defined logs and outputs, among other things. I will probably update this script in the future, but for now, [printing](https://docs.python.org/3/library/functions.html#print) to [stdout](https://en.wikipedia.org/wiki/Standard_streams) should be enough to demonstrate the idea. 
 
 Here's the complete function, we'll brake it down afterwards:
 
@@ -110,13 +110,13 @@ def get_incomplete_mpu_policy(bucket: str):
     """
 ```
 
-* Second, we check if there are lifecycle rules already configured for the bucket. To this we use the s3 client method [get_bucket_lifecycle_configuration()](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3.html#S3.Client.get_bucket_lifecycle_configuration). This method will throw an exception of type ClientError  if no rules are found, so we enclose the call in a try/except:
+* Second, we check if there are lifecycle rules already configured for the bucket. To this we use the s3 client method [get_bucket_lifecycle_configuration()](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3.html#S3.Client.get_bucket_lifecycle_configuration). This method will throw an exception of type ```ClientError```  if no rules are found, so we enclose the call in a try/except:
 
 ```
 try:
     bucket_lifecycle = s3_client.get_bucket_lifecycle_configuration(
-        Bucket=bucket
-    )
+            Bucket=bucket
+            )
 except ClientError:
     # This means there are no lifecycle rules for the bucket. Create one
     print(f"No Incomplete MPU rule exist for this bucket: {bucket}...Adding one")
@@ -138,8 +138,8 @@ if not DRY_RUN:
     # If there's a response, the rule was created
     if response is not None:
         print(f"Lifecycle created for bucket {bucket}: \n{response}")
-else:
-    print("No changes done...Running in Dry run mode")
+    else:
+        print("No changes done...Running in Dry run mode")
 ```
 
 Here , if ```DRY_RUN``` is ```False``` we call the ```create_incomplete_mpu_policy()``` passing the ```bucket``` as the argument. We'll look at this function in a bit, but for now just know it will return the results of applying the lifecycle rule. Therefore, we check if this response is empty or not, and if not empty, the rule was created and we print the the response.
@@ -153,29 +153,29 @@ bucket_lifecycle = s3_client.get_bucket_lifecycle_configuration(
         )
 ```
 
-This is a list of dictionaries (each dictionary being a rule). We iterate through every rule and check if key ```AbortIncompleteMultipartUpload``` exists. If so, a rule containing the policy we need already exist and there's nothing do. Otherwise, we first check if we are running in ```DRY_RUN``` and if not create the rule. This is done in the below code segment:
+This is a list of dictionaries (each dictionary being a rule). We iterate through every rule and check if key ```AbortIncompleteMultipartUpload``` exists. If so, a rule containing the policy we need already exist and there's nothing do. Otherwise, we first check if we are running in ```DRY_RUN``` and if not, create the rule. This is done in the below code segment:
 
 
 ```
 else:
-    print(f"Bucket {bucket} has already created Lifecycle Rules: \nChecking if there is an Incomplete MPU rule in place...")
+        print(f"Bucket {bucket} has already created Lifecycle Rules: \nChecking if there is an Incomplete MPU rule in place...")
 
-    # Go through all the lifecycle rules configured in the bucket
-    for rule in bucket_lifecycle["Rules"]:
+        # Go through all the lifecycle rules configured in the bucket
+        for rule in bucket_lifecycle["Rules"]:
 
-    if rule.get("AbortIncompleteMultipartUpload"):
-        print(f"The following Incomplete MPU rule already exist: {rule['ID']}. Nothing to do.")
-    else:
-        print(f"No Incomplete MPU rule exist for this bucket: {bucket}...Adding one")
+            if rule.get("AbortIncompleteMultipartUpload"):
+                print(f"The following Incomplete MPU rule already exist: {rule['ID']}. Nothing to do.")
+            else:
+                print(f"No Incomplete MPU rule exist for this bucket: {bucket}...Adding one")
 
-        if not DRY_RUN:
-            response = create_incomplete_mpu_policy(bucket=bucket)
-            print(f"Incomplete MPU Lifecycle rule created for bucket {bucket}: \n{response}")
-        else:
-            print(f"Not changing bucket {bucket}. Running in DRY RUN Mode")
+                if not DRY_RUN:
+                    response = create_incomplete_mpu_policy(bucket=bucket)
+                    print(f"Incomplete MPU Lifecycle rule created for bucket {bucket}: \n{response}")
+                else:
+                    print(f"Not changing bucket {bucket}. Running in DRY RUN Mode")
 ```
 
-* As mentioned a few times already, we apply this rule to the bucket by calling the ```create_incomplete_mpu_policy()``` function and passing the bucket we want to update as an argument. First, let's  take a look at the rule we want to apply:
+* As mentioned a few times already, we apply this rule to the bucket by calling the ```create_incomplete_mpu_policy()``` function and passing the bucket name we want to update as an argument. First, let's  take a look at the rule we want to apply:
 
 ```
 rule = {
@@ -194,7 +194,7 @@ rule = {
 }
 ```
 
-This rules defines the incomplete MPU rule, and sets these files to be deleted 7 days after created.
+This rule defines the incomplete MPU rule policy, and sets these files to be deleted 7 days after created.
 
 
 * We defined the create rules as follows:
@@ -208,7 +208,7 @@ def create_incomplete_mpu_policy(bucket: str) -> dict:
         bucket (str): The name of the bucket to apply the configuration onto.
 
     Returns: 
-        response: Dictionary containing the information of the Lifecycle Rule created.
+        response (dict): Dictionary containing the information of the Lifecycle Rule created.
     """
 
     response = s3_client.put_bucket_lifecycle_configuration(
@@ -222,11 +222,11 @@ Same as with the ```get_incomplete_mpu_policy()``` we define the function with i
 
 ### Conclusion:
 
-Hopefully this post provided a good example of how to use the AWS SDK for Python (Boto3) to automate some of the work of operating in AWS. There are a number of enhances we could add to the script. For example, we could:
+Hopefully this post provided a good example of how to use the **AWS SDK for Python (Boto3)** to automate some of the work of operating in AWS. There are a number of enhances we could add to the script. For example, we could:
 
 * Add logic to operate across multiple accounts
-* Use threads to update multiple buckets in parallel using the [multiprocessing](https://docs.python.org/3/library/multiprocessing.html#module-multiprocessing) package
-* Add [backoff and retry logic](https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/) in case the number of buckets are too large and you get throttled by calling the S3 API
+* Process multiple buckets in parallel using the [multiprocessing](https://docs.python.org/3/library/multiprocessing.html#module-multiprocessing) package
+* Add [backoff and retry logic](https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/) in case the number of buckets are too large and you get throttled by calling the S3 API beyond the set limits.
 * Many, many more...
 
-One enhance to increase the level if automation is to use event-driven architectures. With this approach, we could simply listen for events of a bucket being created. Once created, we can trigger a workflow to perform the logic described in this post. We can accomplish all this using event driven and serverless architectures. The code for this is inside ```/s3-mpu-cdk``` directory, and I'll write a future post to explain how to use the ```AWS CDK``` to create  event-driven and serverless architectures using ```Amazon EventBridge``` and ```Lambda```. 
+One enhance to increase the level of automation is to use event-driven architectures. With this approach, we could simply listen for events of a bucket being created. Once created, we can trigger a workflow to perform the logic described in this post. We can accomplish all this using event-driven and serverless architectures. The code for this is inside ```/s3-mpu-cdk``` directory, and I'll write a future post to explain how to use the ```AWS CDK``` to create  event-driven and serverless architectures using ```Amazon EventBridge``` and ```AWS Lambda```. 
