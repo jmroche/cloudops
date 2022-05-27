@@ -1,0 +1,3 @@
+# AWS EBS Snapshot scan and report
+
+This script will scan a given AWS account for all EC2 EBS Snapshots. It will create a DynamoDB table and store the snapshots information (snapshot_id, snapshot_age, volume_size, snapshot_state and date_taken). It will create a report to highlight snapshots that are older than certain amount of time (i.e., olden than 365 days), for the customer to decide if snapshots older that selected age should be deleted.
