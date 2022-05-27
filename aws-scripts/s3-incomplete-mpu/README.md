@@ -1,7 +1,7 @@
 # Automating the creation of S3 Incomplete Multipart Upload Lifecycle Rules to Optimize Cost in AWS
 
 
-This post will go over how you can use AWS Python SDK (Boto3) to scan and get all s3 bucket in an account, check it's lifecycle policies, and create a lifecycle poicy to delete incomplete multiaprt uplaods if no lifecycle policy to do so exist.
+This post will go over how you can use AWS Python SDK (Boto3) to scan and get all s3 bucket in an account, check it's lifecycle policies, and create a lifecycle policy to delete incomplete multiaprt uploads if no lifecycle policy to do so exist.
 
  To understand what S3 Incomplete Multipart Uploads is, how to discover buckets that have incomplete MPUs with [S3 Storage Lens](https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage_lens.html) and how apply the lifecycle rules to these buckets manually, please check out this [post](https://aws.amazon.com/blogs/aws-cloud-financial-management/discovering-and-deleting-incomplete-multipart-uploads-to-lower-amazon-s3-costs/). 
 
