@@ -1,0 +1,111 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: production
+  name: flaskblog-deployment
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: flaskblog
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: flaskblog
+    spec:
+      serviceAccountName: secrets-manager-csi-aws-provider-sa
+      containers:
+      - image: joseroche/flask-blog:latest
+        imagePullPolicy: Always
+        name: flaskblog
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+        - name: secrets-store-inline
+          mountPath: "/mnt/secrets"
+          readOnly: true
+
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+
+        env:
+          - name: DB_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: production-rds-secret
+                key: dbusername
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: production-rds-secret
+                key: dbpassword
+          - name: DB_HOSTNAME
+            valueFrom:
+              secretKeyRef:
+                name: production-rds-secret
+                key: dbhost
+          - name: DB_NAME
+            valueFrom:
+              secretKeyRef:
+                name: production-rds-secret
+                key: dbname
+          - name: SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: flask-secret-key
+                key: flaskkey
+          - name: APP_ENV
+            value: "test"
+          - name: ON_CLOUD
+            value: "true"
+
+      volumes:
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: proddb-creds
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: production
+  name: flaskblog-service
+spec:
+  ports:
+    - port: 80
+      targetPort: 5000
+      protocol: TCP
+  type: NodePort
+  selector:
+    app.kubernetes.io/name: flaskblog
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: production
+  name: flaskblog-ingress
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: instance
+    alb.ingress.kubernetes.io/certificate-arn: ""
+    alb.ingress.kubernetes.io/backend-protocol: HTTP
+    external-dns.alpha.kubernetes.io/hostname: www.devopsinthe.cloud
+spec:
+  rules:
+    - http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: flaskblog-service
+              port:
+                number: 80

@@ -1,0 +1,71 @@
+{
+  "app": "python app.py",
+  "watch": {
+    "include": [
+      "**"
+    ],
+    "exclude": [
+      "README.md",
+      "cdk*.json",
+      "requirements*.txt",
+      "source.bat",
+      "**/__init__.py",
+      "python/__pycache__",
+      "tests"
+    ]
+  },
+  "context": {
+    "@aws-cdk/aws-apigateway:usagePlanKeyOrderInsensitiveId": true,
+    "@aws-cdk/core:stackRelativeExports": true,
+    "@aws-cdk/aws-rds:lowercaseDbIdentifier": true,
+    "@aws-cdk/aws-lambda:recognizeVersionProps": true,
+    "@aws-cdk/aws-cloudfront:defaultSecurityPolicyTLSv1.2_2021": true,
+    "@aws-cdk/core:newStyleStackSynthesis": true,
+    "project_name": "flaskblog",
+    "eks_control_version": "1.21",
+    "eks_worker_ami_version": "1.21.5-20211206",
+    "eks_node_quantity": 2,
+    "eks_node_max_quantity": 5,
+    "eks_node_disk_size": 20,
+    "eks_node_instance_type": "m5.large",
+    "region": "us-east-1",
+    "rds_public_hosted_zone": "arn:aws:route53:::hostedzone/Z059934136BTBOS1XKFVP",
+
+    "test": {
+      "account": "601749221392",
+      "region": "us-east-1",
+      "shortPrefix": "Test",
+      "environmentTag": "test",
+      "env_name": "test",
+      "rds": {
+        "removal_policy": "destroy",
+        "backup": 1,
+        "backtrack_window": "None"
+      }
+
+    },
+    "production": {
+      "account": "601749221392",
+      "region": "us-east-1",
+      "shortPrefix": "Prod",
+      "environmentTag": "production",
+      "env_name": "production",
+      "rds": {
+        "removal_policy": "retain",
+        "backup": 7,
+        "backtrack_window": 24
+      }
+    },
+    "flux":{
+      "flux_version": "v0.30.2",
+      "secret_name": "None",
+      "repo_url": "https://github.com/jmroche/blog.git",
+      "repo_branch": "main",
+      "repo_path": "k8s",
+      "github_user": "jmroche",
+      "github_token_secret_arn": "arn:aws:secretsmanager:us-east-1:601749221392:secret:GITHUB_TOKEN-XBtDg1"
+
+
+    }
+  }
+}
