@@ -3,7 +3,7 @@
 
 Collection of different projects and learning experience around cloud technologies I'm experimenting with. This is a work in progress, and will be adding other projects soon.
 
-
+* [cloudops/public-blog/](https://github.com/jmroche/cloudops/tree/main/public-blog): Python Flask blog project that is deployed on AWS EKS and the entire infrastructure is created using the AWS CDK. 
 * [/aws-cdk/nj-driver-license/](https://github.com/jmroche/cloudops/tree/main/aws-cdk/nj-driver-license): AWS CDK Project and Python application. This projects uses ```Selenium``` to scrape New Jersey's DMV site and look for available appointments for out of state driver license change. The code will run on a schedule of every 10 minutes and use AWS SNS to send a notification to the user once and available appointment is found. 
     * The CDK project creates the infrastructure for the application code to run. Here's we create a VPC, SNS topic, ECS Cluster, and Scheduled ECS Fargate task definition. This will provide a serverless environment that requires no intervention to operate.
 * [cloudops/aws-scripts/](https://github.com/jmroche/cloudops/tree/main/aws-scripts): Contains a collection of scripts to automate several aspects of operating in AWS.
