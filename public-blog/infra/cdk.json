@@ -29,10 +29,10 @@
     "eks_node_disk_size": 20,
     "eks_node_instance_type": "m5.large",
     "region": "us-east-1",
-    "rds_public_hosted_zone": "arn:aws:route53:::hostedzone/Z059934136BTBOS1XKFVP",
+    "rds_public_hosted_zone": "arn:aws:route53:::hostedzone/**********",
 
     "test": {
-      "account": "601749221392",
+      "account": "1234567890",
       "region": "us-east-1",
       "shortPrefix": "Test",
       "environmentTag": "test",
@@ -45,7 +45,7 @@
 
     },
     "production": {
-      "account": "601749221392",
+      "account": "1234567890",
       "region": "us-east-1",
       "shortPrefix": "Prod",
       "environmentTag": "production",
@@ -63,7 +63,7 @@
       "repo_branch": "main",
       "repo_path": "k8s",
       "github_user": "jmroche",
-      "github_token_secret_arn": "arn:aws:secretsmanager:us-east-1:601749221392:secret:GITHUB_TOKEN-XBtDg1"
+      "github_token_secret_arn": "arn:aws:secretsmanager:us-east-1:1234567890:secret:secret_na,e"
 
 
     }
