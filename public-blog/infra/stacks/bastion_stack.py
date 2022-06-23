@@ -152,36 +152,3 @@ class BastionStack(Stack):
             user_data_file = f.read()
 
         bastion_instance.add_user_data(user_data_file)
-
-        """
-        # Set up our kubectl and fluxctl
-        bastion_instance.user_data.add_commands(
-            "curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.21.2/2021-07-05/bin/linux/amd64/kubectl"
-        )
-        bastion_instance.user_data.add_commands("chmod +x ./kubectl")
-        bastion_instance.user_data.add_commands("mv ./kubectl /usr/bin")
-        bastion_instance.user_data.add_commands(
-            "curl -s https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash -"
-        )
-        bastion_instance.user_data.add_commands(
-            "curl -s https://fluxcd.io/install.sh | bash -"
-        )
-        # bastion_instance.user_data.add_commands(
-        #     "curl --silent --location https://rpm.nodesource.com/setup_14.x | bash -")
-        # bastion_instance.user_data.add_commands(
-        #     "yum install nodejs git -y")
-        # bastion_instance.user_data.add_commands(
-        #     f"su - ec2-user -c 'aws eks update-kubeconfig --name {cluster.cluster_name} --region {region}'"
-        # )
-        bastion_instance.user_data.add_commands(
-            f"aws eks update-kubeconfig --name {cluster.cluster_name} --region {region} --kubeconfig '/home/ec2-user/.kube/config'"
-        )
-        bastion_instance.user_data.add_commands(
-            "chown ec2-user:ec2-user /home/ec2-user/.kube/config"
-        )
-        bastion_instance.user_data.add_commands("yum update -y")
-
-        bastion_instance.user_data.add_commands(f"echo {secrets_file} > /home/ec2-user/get_secrets.py")
-        bastion_instance.user_data.add_commands(f"echo {bash_script_file} > /home/ec2-user/set_env_vars.sh")
-        bastion_instance.user_data.add_commands("chmod +x /home/ec2-user/set_env_vars.sh")
-        """

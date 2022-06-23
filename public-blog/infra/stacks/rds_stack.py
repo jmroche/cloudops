@@ -104,23 +104,6 @@ class RDSStack(Stack):
             removal_policy=rds_removal_policy,
         )
 
-        # db_aurora_mysql.connections.allow_default_port_from(
-        #     lambdasg, description="Access from Lambda functions"
-        # )
-        # db_aurora_mysql.connections.allow_default_port_from(
-        #     bastionsg, description="Allow access from Bastion"
-        # )
-
-        # Create an RDS Security Group in order to later allow Pod SG and RDS SG to talk
-
-        # self.rds_sg = ec2.SecurityGroup(
-        #     self,
-        #     "RDS-SG",
-        #     vpc=vpc,
-        #     description="RDS Security Group",
-        #     security_group_name="RDS_SG",
-        # )
-
         # Strore db cluster hostname in parameter store
         rds_hostname_ssm = ssm.StringParameter(
             self,

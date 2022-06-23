@@ -14,7 +14,7 @@ def get_secret():
 
     secret_name = os.environ.get("GITHUB_TOKEN_SECRET_ARN")
     secret_name = (
-        "arn:aws:secretsmanager:us-east-1:601749221392:secret:GITHUB_TOKEN-XBtDg1"
+        "arn:aws:secretsmanager:us-east-1:1234567890:secret:GITHUB_TOKEN_ID"
     )
     region_name = "us-east-1"
 
