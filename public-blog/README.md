@@ -1,9 +1,7 @@
 # DevOps in the Cloud
 
 
-Personal blog where I experiment and document with different cloud technologies and stacks.
-
-[DevOps in the cloud](https://www.devopsinthe.cloud/)
+Personal blog where I experiment and document with different cloud technologies and stacks. The blog can be found [here](https://www.devopsinthe.cloud/).
 
 ### It's a work in progress, and here's what I'm working on and what I have working so far:
 
