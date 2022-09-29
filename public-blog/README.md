@@ -1,16 +1,19 @@
 # DevOps in the Cloud
 
+# DevOps in the Cloud
 
-Personal blog where I experiment and document with different cloud technologies and stacks. The blog can be found [here](https://www.devopsinthe.cloud/).
 
-### It's a work in progress, and here's what I'm working on and what I have working so far:
+Personal blog where I experiment and document with different cloud technologies and stacks.
+
+###
+It's a work in progress, and here's what I'm working on and what I have working so far:
 
 
 
 * Blog MVP: The initial minimum viable product for the blog application. This is written in Python using Bootstrap and Flask.
 * The blog code is stored in Github where the code is unit tested on Pull Request (PRs), and Merge
 * Dependabot checks daily for dependency updates and creates PRs to merge new versions
-* The blog application is containerized and image stored in Dockerhub initially. In the near future, I'll be building an image build pipeline with AWS CodePipeline and store the images in AWS ECR.
+* The blog application is containerized and image stored in AWS Elastic Container Registry (ECR) initially. The image is built via an automated pipeline using GitHub Actions on pushes to the main branch on specific paths.
 * The blog is deployed to Kubernetes in AWS EKS
     * Kubernetes has the following components:
         * ALB Controller
@@ -33,10 +36,14 @@ Personal blog where I experiment and document with different cloud technologies 
     * AWS Elastic Container Registry to stored docker images
     * Bastion host in the Application subnets, reachable only using SSM with connections to the Kubernetes cluster dynamically configured on creation with additional Kubernetes management application needed: Helm and Flux
 * The entire Infrastructure as Code is created using the AWS CDK and the different stacks can be found in `/infra/stacks`
+* Currently there are two different pipelines built using GitHub Actions:
+    * On PRs the code will be linted and Python tests will be run to ensure there are no errors introduced to the application.
+    * On commits to the main branch the docker image will be built, tagged and pushed to the AWS Elastic Container Registry (ECR)
+    * On commit Amazon CodeGuru will perform a code review to ensure no security issues are introduced and/or provide suggestions to make the code more effiicient.
+    * On push to ECR, ECR will scan the images for vulnerabilities and alert of any vulnerabilities found
 
 ### Still work in progress:
 
-* Docker Image Build Pipeline
 * Flux GitOps Deployment Pipeline
 * Infrastructure Deployment Pipeline
 
