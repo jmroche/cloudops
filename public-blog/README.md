@@ -1,7 +1,5 @@
 # DevOps in the Cloud
 
-# DevOps in the Cloud
-
 
 Personal blog where I experiment and document with different cloud technologies and stacks.
 
