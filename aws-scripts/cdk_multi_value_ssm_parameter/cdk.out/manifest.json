@@ -36,31 +36,108 @@
         "/CdkSsmParamStack/ssm-string-parameter-with-multiple-values/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ssmstringparameterwithmultiplevalues87857DCC"
+            "data": "ssmstringparameterwithmultiplevalues87857DCC",
+            "trace": [
+              "new StringParameter (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/aws-ssm/lib/parameter.js:1:3410)",
+              "Kernel._create (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/tmppunodbao/lib/program.js:8467:29)",
+              "Kernel.create (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/tmppunodbao/lib/program.js:8196:29)",
+              "KernelHost.processRequest (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/tmppunodbao/lib/program.js:11482:36)",
+              "KernelHost.run (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/tmppunodbao/lib/program.js:11442:22)",
+              "Immediate._onImmediate (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/tmppunodbao/lib/program.js:11443:46)",
+              "process.processImmediate (node:internal/timers:471:21)"
+            ]
           }
         ],
         "/CdkSsmParamStack/CDKMetadata/Default": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "CDKMetadata"
+            "data": "CDKMetadata",
+            "trace": [
+              "new MetadataResource (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/private/metadata-resource.js:1:707)",
+              "/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:2431",
+              "visit (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:3:179)",
+              "visit (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:3:141)",
+              "injectMetadataResources (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:2246)",
+              "Object.synthesize (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:562)",
+              "App.synth (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/stage.js:1:1922)",
+              "/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/tmppunodbao/lib/program.js:8272:105",
+              "Kernel._ensureSync (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/tmppunodbao/lib/program.js:8861:28)",
+              "Kernel.invoke (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/tmppunodbao/lib/program.js:8272:34)",
+              "KernelHost.processRequest (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/tmppunodbao/lib/program.js:11482:36)",
+              "KernelHost.run (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/tmppunodbao/lib/program.js:11442:22)",
+              "Immediate._onImmediate (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/tmppunodbao/lib/program.js:11443:46)",
+              "process.processImmediate (node:internal/timers:471:21)"
+            ]
           }
         ],
         "/CdkSsmParamStack/CDKMetadata/Condition": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "CDKMetadataAvailable"
+            "data": "CDKMetadataAvailable",
+            "trace": [
+              "new MetadataResource (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/private/metadata-resource.js:1:962)",
+              "/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:2431",
+              "visit (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:3:179)",
+              "visit (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:3:141)",
+              "injectMetadataResources (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:2246)",
+              "Object.synthesize (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:562)",
+              "App.synth (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/stage.js:1:1922)",
+              "/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/tmppunodbao/lib/program.js:8272:105",
+              "Kernel._ensureSync (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/tmppunodbao/lib/program.js:8861:28)",
+              "Kernel.invoke (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/tmppunodbao/lib/program.js:8272:34)",
+              "KernelHost.processRequest (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/tmppunodbao/lib/program.js:11482:36)",
+              "KernelHost.run (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/tmppunodbao/lib/program.js:11442:22)",
+              "Immediate._onImmediate (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/tmppunodbao/lib/program.js:11443:46)",
+              "process.processImmediate (node:internal/timers:471:21)"
+            ]
           }
         ],
         "/CdkSsmParamStack/BootstrapVersion": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "BootstrapVersion"
+            "data": "BootstrapVersion",
+            "trace": [
+              "addBootstrapVersionRule (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/stack-synthesizers/stack-synthesizer.js:1:5060)",
+              "DefaultStackSynthesizer.addBootstrapVersionRule (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/stack-synthesizers/stack-synthesizer.js:1:2784)",
+              "DefaultStackSynthesizer.synthesize (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/stack-synthesizers/default-synthesizer.js:1:5681)",
+              "/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:2959",
+              "visit (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:3:179)",
+              "visit (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:3:141)",
+              "synthesizeTree (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:2803)",
+              "Object.synthesize (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:784)",
+              "App.synth (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/stage.js:1:1922)",
+              "/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/tmppunodbao/lib/program.js:8272:105",
+              "Kernel._ensureSync (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/tmppunodbao/lib/program.js:8861:28)",
+              "Kernel.invoke (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/tmppunodbao/lib/program.js:8272:34)",
+              "KernelHost.processRequest (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/tmppunodbao/lib/program.js:11482:36)",
+              "KernelHost.run (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/tmppunodbao/lib/program.js:11442:22)",
+              "Immediate._onImmediate (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/tmppunodbao/lib/program.js:11443:46)",
+              "process.processImmediate (node:internal/timers:471:21)"
+            ]
           }
         ],
         "/CdkSsmParamStack/CheckBootstrapVersion": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "CheckBootstrapVersion"
+            "data": "CheckBootstrapVersion",
+            "trace": [
+              "addBootstrapVersionRule (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/stack-synthesizers/stack-synthesizer.js:1:5413)",
+              "DefaultStackSynthesizer.addBootstrapVersionRule (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/stack-synthesizers/stack-synthesizer.js:1:2784)",
+              "DefaultStackSynthesizer.synthesize (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/stack-synthesizers/default-synthesizer.js:1:5681)",
+              "/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:2959",
+              "visit (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:3:179)",
+              "visit (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:3:141)",
+              "synthesizeTree (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:2803)",
+              "Object.synthesize (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:784)",
+              "App.synth (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/jsii-kernel-TlUwNt/node_modules/aws-cdk-lib/core/lib/stage.js:1:1922)",
+              "/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/tmppunodbao/lib/program.js:8272:105",
+              "Kernel._ensureSync (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/tmppunodbao/lib/program.js:8861:28)",
+              "Kernel.invoke (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/tmppunodbao/lib/program.js:8272:34)",
+              "KernelHost.processRequest (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/tmppunodbao/lib/program.js:11482:36)",
+              "KernelHost.run (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/tmppunodbao/lib/program.js:11442:22)",
+              "Immediate._onImmediate (/private/var/folders/rq/g4z7s4sn1tq11wrqp6673wsr0000gs/T/tmppunodbao/lib/program.js:11443:46)",
+              "process.processImmediate (node:internal/timers:471:21)"
+            ]
           }
         ]
       },
