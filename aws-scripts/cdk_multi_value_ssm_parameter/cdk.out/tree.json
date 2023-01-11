@@ -1,0 +1,100 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "CdkSsmParamStack": {
+        "id": "CdkSsmParamStack",
+        "path": "CdkSsmParamStack",
+        "children": {
+          "ssm-string-parameter-with-multiple-values": {
+            "id": "ssm-string-parameter-with-multiple-values",
+            "path": "CdkSsmParamStack/ssm-string-parameter-with-multiple-values",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "CdkSsmParamStack/ssm-string-parameter-with-multiple-values/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
+                  "aws:cdk:cloudformation:props": {
+                    "type": "String",
+                    "value": "[\n  {\n    \"state\": \"running\",\n    \"types\": [\n      {\n        \"type\": \"x1e.8xlarge\",\n        \"count\": 3\n      },\n      {\n        \"type\": \"m4.xlarge\",\n        \"count\": 1\n      },\n      {\n        \"type\": \"t2.medium\",\n        \"count\": 1\n      },\n      {\n        \"type\": \"t2.micro\",\n        \"count\": 112\n      }\n    ]\n  },\n  {\n    \"state\": \"stopped\",\n    \"types\": [\n      {\n        \"type\": \"m4.large\",\n        \"count\": 1\n      }\n    ]\n  }\n]",
+                    "description": "Saving JSON objects as string list parameters in SSM via AWS CDK",
+                    "name": "StringParamMultipleValues"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ssm.CfnParameter",
+                  "version": "2.59.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ssm.StringParameter",
+              "version": "2.59.0"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "CdkSsmParamStack/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "CdkSsmParamStack/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.59.0"
+                }
+              },
+              "Condition": {
+                "id": "Condition",
+                "path": "CdkSsmParamStack/CDKMetadata/Condition",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnCondition",
+                  "version": "2.59.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.1.215"
+            }
+          },
+          "BootstrapVersion": {
+            "id": "BootstrapVersion",
+            "path": "CdkSsmParamStack/BootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnParameter",
+              "version": "2.59.0"
+            }
+          },
+          "CheckBootstrapVersion": {
+            "id": "CheckBootstrapVersion",
+            "path": "CdkSsmParamStack/CheckBootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnRule",
+              "version": "2.59.0"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.59.0"
+        }
+      },
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree",
+        "constructInfo": {
+          "fqn": "constructs.Construct",
+          "version": "10.1.215"
+        }
+      }
+    },
+    "constructInfo": {
+      "fqn": "aws-cdk-lib.App",
+      "version": "2.59.0"
+    }
+  }
+}
