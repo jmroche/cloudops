@@ -1,0 +1,1 @@
+# EventBridge Rule to notify via SNS when a new EKS Managed Worker Node group AMI is released
