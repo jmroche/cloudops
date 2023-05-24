@@ -24,6 +24,7 @@ AWS_EKS_VERSION = "1.26"
 REGION = "us-east-1"
 PARAMETER_NAME = f"/aws/service/eks/optimized-ami/{AWS_EKS_VERSION}/amazon-linux-2/recommended/image_id"
 RUN_LOCAL = True
+SNS_EAMIL_ENDPOINT = ""  # Add email address to send notifications to.
 
 ######## Setup Localstack ########
 
@@ -273,7 +274,7 @@ def create_eventbridge_target(rule_name: str, topic_arn: str) -> dict:
 if __name__ == "__main__":
     sns_topic = create_sns_topic(name="SSMParameterChangeDetection")
     sns_subscription = create_sns_subscription(
-        topic_arn=sns_topic["TopicArn"], endpoint="jmroche@amazon.com"
+        topic_arn=sns_topic["TopicArn"], endpoint=SNS_EAMIL_ENDPOINT
     )
     sns_topic_attributes = get_sns_topic_attributes(topic_arn=sns_topic["TopicArn"])
     sns_topic_set_attributes = set_sns_topic_attributes(
