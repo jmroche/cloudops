@@ -1,13 +1,19 @@
-# Using AWS Boto3 create the following:
-# 1 An SNS topic with the name "SSMParameterChangeDetection"
-# 2 An SNS subscription for the topic with the email address "XXXXXXXXXXXXXXXXXXXXXXXXXX"
-# 3 Create a SSM Parameter with the name "testParameter" and value "Hello World"
-# 4 Create an EventBridge rule with the name "parameterChangeDetection" using the default event bus.
+"""
+Using AWS Boto3 create the following:
+An SNS topic with to notify the user of a change in the AWS EKS Parameter
+An SNS subscription for the topic with the email address "XXXXXXXXXXXXXXXXXXXXXXXXXX"
+Read the value of the official AWS EKS Parameter "image_id"
+Create an EventBridge rule using the default event bus.
+Create an EventBridge target to the SNS topic to inform the recipients that new AMI has been released
+for the specified Kubernetes version.
+"""
+
 
 import boto3
 import json
 from botocore.config import Config
 from botocore.exceptions import ClientError
+from datetime import datetime
 import logging
 import sys
 
@@ -24,7 +30,7 @@ AWS_EKS_VERSION = "1.26"
 REGION = "us-east-1"
 PARAMETER_NAME = f"/aws/service/eks/optimized-ami/{AWS_EKS_VERSION}/amazon-linux-2/recommended/image_id"
 RUN_LOCAL = True
-SNS_EAMIL_ENDPOINT = ""  # Add email address to send notifications to.
+SNS_EMAIL_ENDPOINT = "test@email.com"  # Add email address to send notifications to.
 
 ######## Setup Localstack ########
 
@@ -37,6 +43,18 @@ endpoint_url = "http://localhost.localstack.cloud:4566"
 #     retries={"max_attempts": 10, "mode": "standard"},
 # )
 ##################################
+
+
+# SNS Input message
+
+# sns_target_message_template = {
+#     "default": {
+#         "message": "New EKS AMI has been released!",
+#         "subject": "New EKS AMI Released",
+#         "iamge_id": "",
+#         "release_date": ""
+#     }
+# }
 
 
 def create_boto3_client_session(service_name: str, run_local=RUN_LOCAL):
@@ -156,6 +174,10 @@ def set_sns_topic_attributes(topic_arn: str, topic_attributes: dict):
     new_topic_policy["Statement"] = current_policy_statements
     new_topic_policy["Id"] = "EBS_SNS_Policy"
 
+    if new_topic_policy["Id"] == topic_policy["Id"]:
+        logger.info(f"SNS topic policy is the same as the current policy")
+        return None
+
     sns_client = create_boto3_client_session(service_name="sns")
 
     try:
@@ -211,7 +233,7 @@ def get_eks_node_ami_version_parameter():
             Name=PARAMETER_NAME, WithDecryption=True
         )
         logger.info(
-            f"Got SSM parameter: Newest AMI {eks_node_ami_version_parameter['Parameter']['Value']}, released on: {eks_node_ami_version_parameter['Parameter']['LastModifiedDate']}"
+            f"Got SSM parameter for Newest AMI for EKS v{AWS_EKS_VERSION}: {eks_node_ami_version_parameter['Parameter']['Value']}, released on: {eks_node_ami_version_parameter['Parameter']['LastModifiedDate'].strftime('%Y-%m-%d %H:%M:%S')}"
         )
     except ClientError:
         logger.exception("Failed to get SSM parameter")
@@ -245,7 +267,7 @@ def create_eventbridge_rule(name: str, description: str, event_pattern: str) -> 
         return eventbridge_rule
 
 
-def create_eventbridge_target(rule_name: str, topic_arn: str) -> dict:
+def create_eventbridge_target(rule_name: str, topic_arn: str, input=None) -> dict:
     """Create the EventBridge target.
 
     Returns:
@@ -255,11 +277,12 @@ def create_eventbridge_target(rule_name: str, topic_arn: str) -> dict:
 
     try:
         eventbridge_target = eventbridge_client.put_targets(
-            Rule="parameterChangeDetectionEKSManagedAMI",
+            Rule=rule_name,
             Targets=[
                 {
                     "Id": "EBS_SNS_Target",
                     "Arn": topic_arn,
+                    # "Input": input,
                 }
             ],
         )
@@ -272,18 +295,33 @@ def create_eventbridge_target(rule_name: str, topic_arn: str) -> dict:
 
 
 if __name__ == "__main__":
-    sns_topic = create_sns_topic(name="SSMParameterChangeDetection")
+    sns_topic = create_sns_topic(
+        name=f"AWSEKSAMI-SSMParameterChangeDetection-v{AWS_EKS_VERSION.replace('.', '-')}"
+    )
     sns_subscription = create_sns_subscription(
-        topic_arn=sns_topic["TopicArn"], endpoint=SNS_EAMIL_ENDPOINT
+        topic_arn=sns_topic["TopicArn"], endpoint=SNS_EMAIL_ENDPOINT
     )
     sns_topic_attributes = get_sns_topic_attributes(topic_arn=sns_topic["TopicArn"])
     sns_topic_set_attributes = set_sns_topic_attributes(
         topic_arn=sns_topic["TopicArn"], topic_attributes=sns_topic_attributes
     )
     eks_node_ami_parameter = get_eks_node_ami_version_parameter()
+    sns_target_message = {
+        "default": {
+            "message": "New EKS AMI has been released!",
+            "subject": "New EKS AMI Released",
+            "iamge_id": eks_node_ami_parameter["Parameter"]["Value"],
+            "release_date": eks_node_ami_parameter["Parameter"][
+                "LastModifiedDate"
+            ].strftime("%Y-%m-%d %H:%M:%S"),
+        }
+    }
+
+    event_bridge_rule_name = f"parameterChangeDetectionEKSManagedAMI-v{AWS_EKS_VERSION}"
+
     event_bridge_rule = create_eventbridge_rule(
-        name="parameterChangeDetectionEKSManagedAMI",
-        description="Check for new versions of EKS Managed Node AMIs",
+        name=event_bridge_rule_name,
+        description=f"Check for new versions of EKS Managed Node AMIs for v{AWS_EKS_VERSION}",
         event_pattern=json.dumps(
             {
                 "source": ["aws.ssm"],
@@ -299,4 +337,10 @@ if __name__ == "__main__":
                 },
             }
         ),
+    )
+
+    event_bridge_target = create_eventbridge_target(
+        rule_name=event_bridge_rule_name,
+        topic_arn=sns_topic["TopicArn"],
+        # input=json.dumps(sns_target_message),
     )
