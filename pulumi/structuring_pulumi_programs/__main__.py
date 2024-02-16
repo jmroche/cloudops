@@ -3,8 +3,6 @@
 import pulumi
 from vpc.vpc import VPCComponent
 from compute.ec2 import EC2Component
-import random
-import yaml
 
 config = pulumi.Config()
 base_tags = config.require_object("tags")
