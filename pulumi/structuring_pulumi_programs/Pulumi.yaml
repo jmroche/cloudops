@@ -1,0 +1,10 @@
+name: structuring_pulumi_programs
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: Structuring Pulumi Programs for Scalability and Maintainability with Py
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: ""
