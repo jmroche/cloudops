@@ -1,0 +1,10 @@
+name: infra
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: DevOps in the Cloud blog infrastructure
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: ""

@@ -1,14 +1,18 @@
 #!/bin/bash
 systemctl enable amazon-ssm-agent
 systemctl start amazon-ssm-agent
-curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.21.2/2021-07-05/bin/linux/amd64/kubectl
+yum update -y
+sudo yum remove awscli
+curl 'https://awscli.amazon.com/awscli-exe-linux-x86_64-2.15.36.zip' -o 'awscliv2.zip'
+unzip awscliv2.zip
+sudo ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
+curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.27.9/2024-01-04/bin/linux/amd64/kubectl
 chmod +x ./kubectl
 mv ./kubectl /usr/bin
 curl -s https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash -
 curl -s https://fluxcd.io/install.sh | bash -
-aws eks update-kubeconfig --name ${Token[TOKEN.681]} --region us-east-1 --kubeconfig '/home/ec2-user/.kube/config'
+aws eks update-kubeconfig --name ${Token[TOKEN.547]} --region us-east-1 --kubeconfig '/home/ec2-user/.kube/config'
 chown ec2-user:ec2-user /home/ec2-user/.kube/config
-yum update -y
 cat << EOF > /home/ec2-user/get_secrets.py # Program to use boto3 to grab AWS Secrets Manager secrets needed to bootstrap Flux from the bastion host.
 # This program will be copied to the bastion instance to be ran there.
 import base64

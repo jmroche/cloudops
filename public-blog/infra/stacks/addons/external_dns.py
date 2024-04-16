@@ -47,7 +47,7 @@ class ExternalDNSStack(Stack):
             "external-dns-helm-chart",
             chart="external-dns",
             repository="https://kubernetes-sigs.github.io/external-dns/",
-            version="1.7.1",
+            version="1.11.0",
             release="external-dns",
             namespace="kube-system",
             values={

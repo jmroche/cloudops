@@ -32,17 +32,17 @@ class InfraStack(Stack):
         vpc_stack = VPCStack(self, "VPCStack")
         security_stack = SecurityStack(self, "SecurityStack", vpc=vpc_stack.vpc)
         ecr_stack = ECRStack(self, "ECRStack")
-        dev_rds_stack = RDSStack(
-            self,
-            "TestRDSStack",
-            vpc=vpc_stack.vpc,
-            env_name=test_env_name,
-            project_name=project_name,
-            kmskey=kms_stack.kms_rds,
-            security_group=security_stack.rds_sg,
-        )
-        test_creds_secret_arn = dev_rds_stack.db_creds_secret_arn
-        test_db_hostname_arn = dev_rds_stack.rds_hostname_ssm_arn
+        # dev_rds_stack = RDSStack(
+        #     self,
+        #     "TestRDSStack",
+        #     vpc=vpc_stack.vpc,
+        #     env_name=test_env_name,
+        #     project_name=project_name,
+        #     kmskey=kms_stack.kms_rds,
+        #     security_group=security_stack.rds_sg,
+        # )
+        # test_creds_secret_arn = dev_rds_stack.db_creds_secret_arn
+        # test_db_hostname_arn = dev_rds_stack.rds_hostname_ssm_arn
 
         prod_rds_stack = RDSStack(
             self,
@@ -66,8 +66,8 @@ class InfraStack(Stack):
             bastion_sg=security_stack.bastion_sg,
             ecr_repo=ecr_stack.ecr_repo,
             kmskey=kms_stack.kms_rds,
-            test_creds_secret_arn=test_creds_secret_arn,
-            test_db_hostname_arn=test_db_hostname_arn,
+            # test_creds_secret_arn=test_creds_secret_arn,
+            # test_db_hostname_arn=test_db_hostname_arn,
             prod_creds_secret_arn=prod_creds_secret_arn,
             prod_db_hostname_arn=prod_db_hostname_arn,
         )

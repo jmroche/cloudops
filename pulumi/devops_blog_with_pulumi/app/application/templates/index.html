@@ -1,0 +1,100 @@
+{% include "header.html" %}
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url('https://images.unsplash.com/photo-1561736778-92e52a7769ef?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="site-heading">
+            <h1>DevOps in the Cloud Blog</h1>
+            <span class="subheading">A collection of random Cloudy stuff.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        {% for post in all_posts %}
+        <div class="post-preview">
+          <a href="{{ url_for('show_post', post_name=post.blog_title_str) }}">
+            <h2 class="post-title">
+              {{post.title}}
+            </h2>
+            <h3 class="post-subtitle">
+              {{post.subtitle}}
+            </h3>
+          </a>
+          <p class="post-meta">Posted by
+            <a href="#">{{post.author.name}}</a>
+            on {{post.date}}
+            {% if current_user.id == 1 %}
+              <a href="{{url_for('delete_post', post_id=post.id) }}">✘</a>
+            {% endif %}
+          </p>
+          {% if post.is_draft != False %}
+          <span class="badge badge-warning">Draft</span>
+          {% endif %}
+        </div>
+        {% if post.post_views %}
+          {% set views = post.post_views %}
+        {% else %}
+          {% set views = 0 %}
+        {% endif %}
+        {% if post.post_likes %}
+          {% set likes = post.post_likes %}
+        {% else %}
+          {% set likes = 0 %}
+        {% endif %}
+
+        <div class="container">
+          <div class="row">
+            <div class="col-6 col-sm-1 col-md-1">
+              <ul class="list-inline">
+                <li class="list-inline-item">
+                  <!-- <a href="https://twitter.com/jose_roche" target="_blank"> -->
+                    <span class="fa-stack-1x fa-sm">
+                      <!-- <i class="fas fa-circle fa-stack-2x"></i> -->
+                      <i class="far fa-eye fa-sm"></i>
+                      <label>{{ views }}</label>
+                    </span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="col-6 col-sm-1 col-md-1">
+              <ul class="list-inline">
+                <li class="list-inline-item">
+                  <!-- <a href="https://twitter.com/jose_roche" target="_blank"> -->
+                    <span class="fa-stack-1x fa-sm">
+                      <!-- <i class="fas fa-circle fa-stack-2x"></i> -->
+                      <i class="far fa-thumbs-up fa-sm"></i>
+                      <label>{{ likes }}</label>
+                    </span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+        <hr>
+        {% endfor %}
+
+
+        <!-- New Post -->
+        <div class="clearfix">
+          {% if current_user.id == 1 %}
+          <a class="btn btn-primary float-right" href="{{url_for('add_new_post')}}">Create New Post</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr>
+
+{% include "footer.html" %}

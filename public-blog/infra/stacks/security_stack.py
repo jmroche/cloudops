@@ -103,6 +103,29 @@ class SecurityStack(Stack):
             )
         )
 
+        # Create the EKS worker node role
+        # Worker nodes IAM role
+        worker_role = iam.Role(
+            self,
+            "WorkerRole",
+            assumed_by=iam.ServicePrincipal("ec2.amazonaws.com"),
+            managed_policies=[
+                iam.ManagedPolicy.from_aws_managed_policy_name(
+                    "AmazonEKSWorkerNodePolicy"
+                ),
+                iam.ManagedPolicy.from_aws_managed_policy_name(
+                    "AmazonEC2ContainerRegistryReadOnly"
+                ),
+                iam.ManagedPolicy.from_aws_managed_policy_name("AmazonEKS_CNI_Policy"),
+                iam.ManagedPolicy.from_aws_managed_policy_name(
+                    "AmazonEKSVPCResourceController"
+                ),  # Allows us to use Security Groups for pods
+                iam.ManagedPolicy.from_aws_managed_policy_name(
+                    "AmazonSSMManagedInstanceCore"
+                ),
+            ],
+        )
+
         # Export the Role ARN for EKS and Bastion stacks to consume
         CfnOutput(
             self,
@@ -121,4 +144,14 @@ class SecurityStack(Stack):
             value=self.pod_sg.security_group_id,
             description="POD_SG security group id export.",
             export_name="podsg-id",
+        )
+
+        # Export the Worker Node role to be consumed by the EKS stack
+
+        CfnOutput(
+            self,
+            "worker-node-role",
+            value=worker_role.role_arn,
+            description="EKS Worker Node IAM Role",
+            export_name="eks-worker-node-role",
         )

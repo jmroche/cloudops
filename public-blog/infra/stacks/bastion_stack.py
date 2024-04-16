@@ -5,7 +5,6 @@ using user data.
 """
 import os
 from platform import machine
-from turtle import clear
 
 import aws_cdk
 from aws_cdk import aws_ec2 as ec2
@@ -96,7 +95,9 @@ class BastionStack(Stack):
                     ),
                 )
             ],
-            vpc_subnets=ec2.SubnetType.PRIVATE_WITH_NAT,
+            vpc_subnets=ec2.SubnetSelection(
+                subnet_type=ec2.SubnetType.PRIVATE_WITH_EGRESS
+            ),
             security_group=bastion_sg,
             role=bastion_role,
         )
@@ -118,6 +119,7 @@ class BastionStack(Stack):
             bash_script_file = f.read()
 
         # set the export var to set global flux and help path
+        # kubectl install docs: https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html
 
         export = "export PATH='/usr/local/bin:$PATH' >> /home/ec2-user/.bashrc"
         # Commands to create bash script to run on the bastion and bootstrap the EKS cluster
@@ -125,14 +127,18 @@ class BastionStack(Stack):
             "#!/bin/bash",
             "systemctl enable amazon-ssm-agent",
             "systemctl start amazon-ssm-agent",
-            "curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.21.2/2021-07-05/bin/linux/amd64/kubectl",
+            "yum update -y",
+            "sudo yum remove awscli",
+            "curl 'https://awscli.amazon.com/awscli-exe-linux-x86_64-2.15.36.zip' -o 'awscliv2.zip'",
+            "unzip awscliv2.zip",
+            "sudo ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update",
+            "curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.27.9/2024-01-04/bin/linux/amd64/kubectl",
             "chmod +x ./kubectl",
             "mv ./kubectl /usr/bin",
             "curl -s https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash -",
             "curl -s https://fluxcd.io/install.sh | bash -",
             f"aws eks update-kubeconfig --name {cluster.cluster_name} --region {region} --kubeconfig '/home/ec2-user/.kube/config'",
             "chown ec2-user:ec2-user /home/ec2-user/.kube/config",
-            "yum update -y",
             f"cat << EOF > /home/ec2-user/get_secrets.py {secrets_file}\nEOF\n",
             "pip3 install boto3",
             f"cat << 'EOF' > /home/ec2-user/set_env_vars.sh\n{bash_script_file}\nEOF\n",
@@ -152,3 +158,36 @@ class BastionStack(Stack):
             user_data_file = f.read()
 
         bastion_instance.add_user_data(user_data_file)
+
+        """
+        # Set up our kubectl and fluxctl
+        bastion_instance.user_data.add_commands(
+            "curl -o kubectl  https://s3.us-west-2.amazonaws.com/amazon-eks/1.26.4/2023-05-11/bin/darwin/amd64/kubectl"
+        )
+        bastion_instance.user_data.add_commands("chmod +x ./kubectl")
+        bastion_instance.user_data.add_commands("mv ./kubectl /usr/bin")
+        bastion_instance.user_data.add_commands(
+            "curl -s https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash -"
+        )
+        bastion_instance.user_data.add_commands(
+            "curl -s https://fluxcd.io/install.sh | bash -"
+        )
+        # bastion_instance.user_data.add_commands(
+        #     "curl --silent --location https://rpm.nodesource.com/setup_14.x | bash -")
+        # bastion_instance.user_data.add_commands(
+        #     "yum install nodejs git -y")
+        # bastion_instance.user_data.add_commands(
+        #     f"su - ec2-user -c 'aws eks update-kubeconfig --name {cluster.cluster_name} --region {region}'"
+        # )
+        bastion_instance.user_data.add_commands(
+            f"aws eks update-kubeconfig --name {cluster.cluster_name} --region {region} --kubeconfig '/home/ec2-user/.kube/config'"
+        )
+        bastion_instance.user_data.add_commands(
+            "chown ec2-user:ec2-user /home/ec2-user/.kube/config"
+        )
+        bastion_instance.user_data.add_commands("yum update -y")
+
+        bastion_instance.user_data.add_commands(f"echo {secrets_file} > /home/ec2-user/get_secrets.py")
+        bastion_instance.user_data.add_commands(f"echo {bash_script_file} > /home/ec2-user/set_env_vars.sh")
+        bastion_instance.user_data.add_commands("chmod +x /home/ec2-user/set_env_vars.sh")
+        """

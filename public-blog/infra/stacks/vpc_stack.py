@@ -26,7 +26,7 @@ class VPCStack(Stack):
                 ec2.SubnetConfiguration(
                     cidr_mask=24,
                     name="Application",
-                    subnet_type=ec2.SubnetType.PRIVATE_WITH_NAT,
+                    subnet_type=ec2.SubnetType.PRIVATE_WITH_EGRESS,
                 ),
                 ec2.SubnetConfiguration(
                     cidr_mask=24, name="DB", subnet_type=ec2.SubnetType.PRIVATE_ISOLATED

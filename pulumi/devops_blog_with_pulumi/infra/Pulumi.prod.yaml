@@ -1,0 +1,17 @@
+config:
+  aws:region: us-east-1
+  aws-native:region: us-east-1
+  tags: {"auto-delete": "never"}
+  subnet_number: 3
+  application_subnet: ""
+  projectName: "devops-blog"
+  aurora_instance_number: 1
+  aurora_instance_type: db.t4g.medium
+  aurora_instance_storage: "20"
+  aurora_instance_engine: aurora-mysql
+  eks_cluster_name: "devops-blog"
+  eks_cluster_version: "1.29"
+  eks_cluster_node_type: m5.large
+  eks_cluster_min_node_number: 3
+  eks_cluster_max_node_number: 6
+  node_root_volume_size: 20

@@ -1,0 +1,204 @@
+{% include "header.html" %}
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url({{ url_for('static', filename='img/about-me.jpeg')}})">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="page-heading">
+            <h1>About Me</h1>
+            <span class="subheading">This is what I do.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container-fluid p-0">
+    <!-- About-->
+    <section class="col-lg-8 col-md-10 mx-auto" id="about">
+        <div class="resume-section-content">
+            <h1 class="mb-0 page-heading">
+                Jose
+                <span class="text-primary">Roche</span>
+            </h1>
+            <div class="location subheading mb-5">
+                New York Metro Area
+                <a href="mailto:josemroche@gmail.com">josemroche@gmail.com</a>
+            </div>
+            <p class="lead mb-5">
+            <p>Proactive and goal-oriented Global Operations and Cloud Technology leader with extensive experience running end-to-end Operations, Technology departments and production systems in global, high demanding markets. Manage diverse customers and provide support to cross-functional teams in charge of company strategies, daily operations, support, troubleshooting and maintenance of various areas such as Cloud Operations, Security, Technology and Service Delivery. Plan and lead the operational and technical strategies, shaping and sharing best-practices across all teams promoting a continuous improvement mindset. Experienced managing business compliance with internal/external regulations and commitments in customer-focused organizations, delivering high quality services to external/internal customers. Establish control processes to ensure all SLA’s and KPI’s are consistently met.</p>
+            <p>
+      </section>
+      <hr class="col-lg-8 col-md-10 mx-auto" />
+      <!-- Experience-->
+      <section class="col-lg-8 col-md-10 mx-auto" id="experience">
+        <div class="resume-section-content">
+            <h2 class="mb-5">Experience</h2>
+            <!-- AWS -->
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                <div class="flex-grow-1">
+                    <h3 class="mb-0">Technical Account Manager</h3>
+                    <!-- <div class="location subheading mb-3">Amazon Web Services (AWS)</div> -->
+                    <div class="flex-shrink-0"><span class="text-primary">June 2019 - Present</span></div>
+                    <p class="lead mb-5">
+                      <p>Customer advocate in charge of providing technical and operational guidance to help customers develop best-in-class cloud strategies to plan, migrate, operate and reinvent in AWS. I serve as a subject matter expert driving discussions across the organization’s teams - Developers, Operations, Security and Senior Leadership executives, among others, to guide and help them plan, deploy and build cloud native solutions that are highly available, scalable and reliable using best practices, while proactively helping them keep their environments operating secure and in good health.</p>
+                    <ul>
+                      <li>I am an experienced migration expert, having successfully guided multiple customers through the process of developing strategies and migrating to AWS. Utilizing a variety of techniques, including:</li>
+                      <ul>
+                        <li>Rehosting with tools like AWS Migration Services and AWS DMS</li>
+                        <li>Replatforming with services such as RDS, EKS, and EFS</li>
+                        <li>Re-architecting with tools and services like Kubernetes, API GW, Lambda, EventBridge, ECS, and Fargate. </li>
+                        <li>My efforts have resulted in the migration of: </li>
+                        <ul>
+                          <li>Over 7,000 servers</li>
+                          <li>500 applications </li>
+                          <li>Sunsetting of 8 data centers.</li>
+                          <li>Led my customers reduce their AWS Monthly Recurring spend by over $100,000.</li>
+                        </ul>
+                      </ul>
+                      <li>I have extensive experience designing, deploying and operating various services, including Kubernetes-based container applications, Serverless Event-driven systems, and AWS cloud infrastructure using the AWS SDK, CDK and CI/CD pipelines following Infrastructure as Code (IaC) principles to expertly demonstrate building and maintaining well-architected and highly resilient workloads on AWS to customers.</li>
+                      <li>I’m a subject matter expert in the resilience area of depth whereI hold multiple workshops and other engagements to help AWS customers design, test and ensure that their applications running on AWS are reliable, resilient and highly available; and the teams operating them have developed the right processes, playbooks and experience to avoid and/or operate in disaster scenarios.</li>
+                      <ul>
+                        <li>I’m currently leading the expansion of this offering to the LATAM region by creating the processes, training and onboarding practitioners and customers from the region. This is highly visible work recently highlighted in a company-wide all-hands.</li>
+                      </ul>
+                      <li>As a Certified Kubernetes Administrator (CKA) and experienced infrastructure operations engineer I support internal teams, as well as customers’ teams follow best practices by holding workshops, architecture and operational reviews, participate in correction of errors discussions and other engagements on deploying Kubernetes/EKS and managing infrastructure as code using the AWS Cloud Development Kit (CDK) and AWS Python SDK (boto3).</li>
+                      <li>As an experienced operations engineer I constantly support customers troubleshoot operational issues impacting their cloud operations to identify, resolve and learn from these issues to avoid future impacts. I help them create post-mortem, run-books, play books, designing tests and identify code changes to enhance their architecture and operations to enhance their operational excellence, encouraging a continuous learning mindset. </li>
+                      <li>Lead internal discussion within AWS in the adoption of Infrastructure as Code using the AWS CDK and actively participate helping others troubleshoot issue writing and deploying infrastructure with the CDK.</li>
+                      <li>I’m experienced in cost optimization strategies in AWS and have guided my customers to save over $100,000 in Monthly Recurring Costs by implementing best practices in cloud financial management as well as following cloud design best practices.</li>
+                    </ul>
+                </div>
+
+            </div>
+            <!-- Nielsen Service Delivery Leader-->
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+              <div class="flex-grow-1">
+                  <h3 class="mb-0">Service Delivery Leader</h3>
+                  <!-- <div class="location subheading mb-3">Nielsen</div> -->
+                  <div class="flex-shrink-0"><span class="text-primary">March 2010 - June 2019</span></div>
+                  <p class="lead mb-5">
+                  <p>I led various global operations with over 7 MM dollars in annual budgets. This included leading over 10 teams with over 50 people comprised of technology and non-technology members across multiple countries, responsible for the day-to-day execution, production, operations, deployment, service delivery and performance of various areas within Operations responsible for clients’ deliverables. </p>
+                  <ul>
+                    <li>I created and owned one of the fastest growing internal applications deployed in over 15 countries to help our global operations team manage our reference data systems observability and management. The application manages thousands of critical reference systems across countries in LATAM, Europe and APAC. This application was considered a gold standard and advocated by executives to be part of the on-boarding process of every new operation.</li>
+                      <ul>
+                        <li>Led the redesign of the monolithic application following a service-oriented architecture (SOA) and migrated to containers to be deployed to Kubernetes clusters to create a scalable architecture capable of being expanded to additional countries.</li>
+                      </ul>
+                    <li>I mentored and coached direct reports, and other members of the international operations teams, working with them to identify, engage and develop their careers through check-ins, talent/performance reviews, action planning and annual summaries. I was directly involved in the approval, promotion and relocation of dozens of members of our international operations teams. </li>
+                    <li>Implement and manage quality metrics and quality controls, taking remedial action to correct any problem that could impact quality and/or Service Level Agreements (SLAs), leading and encouraging teams to engage in continuous process of automation, testing and optimization of all our production workloads and processes.</li>
+                      <ul>
+                        <li>I led the creation of regional change control boards (COBs) manned by a rotating governing body of operation team members that reviewed each other's plans for changes and new deployments. This would be similar to PR reviews.</li>
+                          <ul>
+                            <li>This helped us lower the amount of P0 incidents due to errors introduced in changes by 80%.</li>
+                          </ul>
+                      </ul>
+                    <li>I led the recovery of the Puerto Rico (PR) operation after one of the biggest natural disasters (Hurricane Maria in 2017) that had impacted one of our global operations. </li>
+                      <ul>
+                        <li>The PR operations received high praises by our customers and leadership by the design I created and implemented. Using techniques such as fault isolation, cell-based architecture, shuffle sharding and multi-sites deployment, our data centers and operations never went offline even when the island was without power for a prolonged period of time, and our data center for over two (2) months.</li>
+                        <li>I created and implemented the strategy to recover our sample panel of homes and provide our customers and leadership with continuous updates that help understand the state of the sample and recovery of the island. Earning praise and trust with our customers and the market.</li>
+                      </ul>
+                    <li>Continuously meet with clients at all levels, including executive level (VPs, C-level), across the industry to provide updates on our execution and operational health as well as future plans and projects.</li>
+                    <li>Continuously support commercial teams across different countries to grow our businesses by providing operational support during client negotiations.</li>
+                    <li>Present and talk during industry events, such as conferences, product launches, seminars, etc., as needed, to support the business from a subject matter expert in Nielsen Operations.</li>
+                  </ul>
+          </section>
+           <!-- Skills-->
+           <hr class="col-lg-8 col-md-10 mx-auto" />
+          <section class="col-lg-8 col-md-10 mx-auto" id="skills">
+          <div class="resume-section-content">
+              <h2 class="mb-5">Skills</h2>
+              <div class="location subheading mb-3">Programming Languages & Tools</div>
+              <ul class="list-inline dev-icons">
+                  <li class="list-inline-item"><i class="fab fa-aws"></i></li>
+                  <li class="list-inline-item"><i class="fab fa-linux"></i></li>
+                  <li class="list-inline-item"><i class="fab fa-jenkins"></i></li>
+                  <li class="list-inline-item"><i class="fab fa-docker"></i></li>
+                  <!-- <li class="list-inline-item"><i class="fa-solid fa-lambda"></i></li> -->
+                  <li class="list-inline-item"><i class="fab fa-js-square"></i></li>
+                  <li class="list-inline-item"><i class="fab fa-python"></i></li>
+                  <li class="list-inline-item"><i class="fab fa-npm"></i></li>
+              </ul>
+              <p>
+              <div class="location subheading mb-3">Expert in</div>
+              <ul class="fa-ul mb-0">
+                  <li>
+                      <span class="fa-li"><i class="fas fa-check"></i></span>
+                      Amazon Web Services (AWS) Cloud
+                  </li>
+                  <li>
+                    <span class="fa-li"><i class="fas fa-check"></i></span>
+                    Infrastructure as Code: AWS CDK, Boto3 and CloudFormation
+                  </li>
+                  <li>
+                    <span class="fa-li"><i class="fas fa-check"></i></span>
+                    Kubernetes
+                  </li>
+                  <li>
+                    <span class="fa-li"><i class="fas fa-check"></i></span>
+                    Linux
+                  </li>
+                  <li>
+                    <span class="fa-li"><i class="fas fa-check"></i></span>
+                    Networking
+                  </li>
+                  <li>
+                    <span class="fa-li"><i class="fas fa-check"></i></span>
+                    Cloud Migration, Design, Automation and Operations
+                  </li>
+                  <li>
+                    <span class="fa-li"><i class="fas fa-check"></i></span>
+                    Cloud Cost Optimization
+                  </li>
+              </ul>
+              <p></p>
+              <div class="location subheading mb-3">Proficient In</div>
+                  <ul class="fa-ul mb-0">
+                    <li>
+                      <span class="fa-li"><i class="fas fa-check"></i></span>
+                      Cloud Automation with Python (Boto3) and Node.js
+                    </li>
+                    <li>
+                      <span class="fa-li"><i class="fas fa-check"></i></span>
+                      CI/CD: GitHub, GitHub Actions, Jenkins, AWS CodePipeline
+                    </li>
+                    <li>
+                      <span class="fa-li"><i class="fas fa-check"></i></span>
+                      Serverless Technologies: AWS Lambda, DynamoDB, EventBridge, SNS, SQS, AWS Step Functions
+                    </li>
+                    <p></p>
+          </section>
+          <hr class="col-lg-8 col-md-10 mx-auto" />
+            <!-- Certifications-->
+            <section class="col-lg-8 col-md-10 mx-auto" id="certifications">
+                <div class="resume-section-content">
+                    <h2 class="mb-5">Certifications</h2>
+                            <a href="https://www.credly.com/badges/ef84e734-2b53-449a-aeed-a2114093715e/public_url" target="_blank"><img src="https://images.credly.com/size/110x110/images/2d84e428-9078-49b6-a804-13c15383d0de/image.png"></a>
+                            <a href="https://www.credly.com/badges/7a712f99-4d38-4560-bdae-991bd5ce470d/public_url" target="_blank"><img src="https://images.credly.com/size/110x110/images/8b8ed108-e77d-4396-ac59-2504583b9d54/cka_from_cncfsite__281_29.png"></a>
+                            <a href="https://www.credly.com/badges/9f225329-f79b-4e9b-a40a-41cad31f794b/public_url" target="_blank"><img src="https://images.credly.com/size/110x110/images/efbdc0d6-b46e-4e3c-8cf8-2314d8a5b971/GCC_badge_python_1000x1000.png"></a>
+                            <a href="https://www.credly.com/badges/83f883cb-dda6-433e-a345-4c5e6fe1a8af/public_url" target="_blank"><img src="https://images.credly.com/size/110x110/images/f88d800c-5261-45c6-9515-0458e31c3e16/ckad_from_cncfsite.png"></a>
+
+            </section>
+            <!--Articles-->
+            <hr class="col-lg-8 col-md-10 mx-auto" />
+            <section class="col-lg-8 col-md-10 mx-auto" id="articles">
+              <div class="resume-section-content">
+                  <h2 class="mb-5">Articles</h2>
+                  <ul class="fa-ul mb-0">
+                      <li>
+                          <span class="fa-li"><i class="far fa-newspaper"></i></span>
+                          <a class="u-link" href="https://www.devopsinthe.cloud/post/automating-the-creation-of-s3-incomplete-multipart-upload-lifecycle-rules-to-optimize-cost-in-aws">Automating the creation of S3 Incomplete Multipart Upload Lifecycle Rules to Optimize Cost in AWS</a>
+                      </li>
+                      <li>
+                        <span class="fa-li"><i class="far fa-newspaper"></i></span>
+                        <a class="u-link" href="https://www.devopsinthe.cloud/post/automating-the-creation-of-s3-incomplete-multipart-upload-lifecycle-rules-to-optimize-cost-using-an-event-driven-architecture">Automating the creation of S3 Incomplete Multipart Upload Lifecycle Rules to Optimize Cost Using an Event-driven Architecture</a>
+                    </li>
+                    <li>
+                      <span class="fa-li"><i class="far fa-newspaper"></i></span>
+                      <a class="u-link" href="https://www.devopsinthe.cloud/post/saving-multiple-values-within-a-single-parameter-string-in-aws-systems-manager-parameter-store">Saving Multiple Values within a single Parameter String in AWS Systems Manager Parameter Store</a>
+                  </li>
+                  </ul>
+              </div>
+          </section>
+
+  {% include "footer.html" %}

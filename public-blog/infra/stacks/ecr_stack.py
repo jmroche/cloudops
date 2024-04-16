@@ -23,6 +23,7 @@ class ECRStack(Stack):
             image_scan_on_push=True,
             repository_name=f"{project_name}-image-repo",
             removal_policy=RemovalPolicy.DESTROY,
+            empty_on_delete=True,
         )
 
         self.cfn_output_ecr_uri = CfnOutput(

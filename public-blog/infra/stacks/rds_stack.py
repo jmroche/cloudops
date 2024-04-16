@@ -37,6 +37,7 @@ class RDSStack(Stack):
         json_template = {"username": "admin"}
 
         env_settings = self.node.try_get_context(env_name)
+        project_name = self.node.try_get_context("project_name")
 
         self.db_creds = sm.Secret(
             self,
@@ -72,8 +73,10 @@ class RDSStack(Stack):
             self,
             "auroramysql",
             default_database_name=f"{project_name}{env_name}",
+            cluster_identifier=f"{project_name}-{env_name}-aurora-cluster",
+            instance_identifier_base=f"{project_name}-{env_name}-aurora-instance",
             engine=rds.DatabaseClusterEngine.aurora_mysql(
-                version=rds.AuroraMysqlEngineVersion.VER_2_10_1
+                version=rds.AuroraMysqlEngineVersion.VER_3_04_1
             ),
             instances=1,
             storage_encrypted=True,
@@ -93,7 +96,7 @@ class RDSStack(Stack):
                 parameter_group=rds.ParameterGroup.from_parameter_group_name(
                     self,
                     f"pg-{env_name}",
-                    parameter_group_name="default.aurora-mysql5.7",
+                    parameter_group_name="default.aurora-mysql8.0",
                 ),
                 security_groups=[security_group],
             ),
@@ -103,6 +106,23 @@ class RDSStack(Stack):
             backtrack_window=rds_backtrack_window,
             removal_policy=rds_removal_policy,
         )
+
+        # db_aurora_mysql.connections.allow_default_port_from(
+        #     lambdasg, description="Access from Lambda functions"
+        # )
+        # db_aurora_mysql.connections.allow_default_port_from(
+        #     bastionsg, description="Allow access from Bastion"
+        # )
+
+        # Create an RDS Security Group in order to later allow Pod SG and RDS SG to talk
+
+        # self.rds_sg = ec2.SecurityGroup(
+        #     self,
+        #     "RDS-SG",
+        #     vpc=vpc,
+        #     description="RDS Security Group",
+        #     security_group_name="RDS_SG",
+        # )
 
         # Strore db cluster hostname in parameter store
         rds_hostname_ssm = ssm.StringParameter(

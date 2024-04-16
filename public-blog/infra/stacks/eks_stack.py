@@ -17,6 +17,7 @@ from aws_cdk import aws_kms as kms
 from aws_cdk import aws_secretsmanager as sm
 from aws_cdk import RemovalPolicy
 from aws_cdk import Stack
+from aws_cdk.lambda_layer_kubectl_v27 import KubectlV27Layer
 from constructs import Construct
 from constructs import Node
 
@@ -55,7 +56,32 @@ class EKSStack(Stack):
 
         cluster_admin_role_arn = aws_cdk.Fn.import_value("eks-bastion-role")
 
+        # Read the EKS Control Plane versions from the context
+        # This is the version of the control plane that will be installed on the cluster
+        cluster_new_version = self.node.try_get_context("cluster_new_versions")
+        if cluster_new_version["upgrade_cluster"]:
+            EKS_CONTROL_PLANE_VERSION = cluster_new_version["eks_control_version"]
+            EKS_WORKER_AMI_VERSION = cluster_new_version["eks_worker_ami_version"]
+            AWSLBCONTROLLER_VERSION = cluster_new_version["awslbcontroller_version"]
+            CLUSTER_AUTOSCALER_VERSION = cluster_new_version[
+                "cluster_autoscaler_version"
+            ]
+            METRICS_SERVER_VERSION = cluster_new_version["metrics_server_version"]
+            AWS_VPC_CNI_VERSION = cluster_new_version["aws_vpc_cni_version"]
+        else:
+            EKS_CONTROL_PLANE_VERSION = self.node.try_get_context("eks_control_version")
+            EKS_WORKER_AMI_VERSION = self.node.try_get_context("eks_worker_ami_version")
+            AWSLBCONTROLLER_VERSION = self.node.try_get_context(
+                "awslbcontroller_version"
+            )
+            CLUSTER_AUTOSCALER_VERSION = self.node.try_get_context(
+                "cluster_autoscaler_version"
+            )
+            METRICS_SERVER_VERSION = self.node.try_get_context("metrics_server_version")
+            AWS_VPC_CNI_VERSION = self.node.try_get_context("aws_vpc_cni_version")
+
         # Create an EKS Cluster
+
         self.eks_cluster = eks.Cluster(
             self,
             "cluster",
@@ -66,38 +92,27 @@ class EKSStack(Stack):
             # Make our cluster's control plane accessible only within our private VPC
             # This means that we'll have to ssh to a jumpbox/bastion or set up a VPN to manage it
             endpoint_access=eks.EndpointAccess.PRIVATE,
-            version=eks.KubernetesVersion.of(
-                self.node.try_get_context("eks_control_version")
-            ),
+            version=eks.KubernetesVersion.of(EKS_CONTROL_PLANE_VERSION),
             default_capacity=0,
             tags=spring_cleaning_tags,
+            kubectl_layer=KubectlV27Layer(self, "KubectlV27Layer"),
         )
 
-        # Worker nodes IAM role
-        worker_role = iam.Role(
-            self,
-            "WorkerRole",
-            assumed_by=iam.ServicePrincipal("ec2.amazonaws.com"),
-            managed_policies=[
-                iam.ManagedPolicy.from_aws_managed_policy_name(
-                    "AmazonEKSWorkerNodePolicy"
-                ),
-                iam.ManagedPolicy.from_aws_managed_policy_name(
-                    "AmazonEC2ContainerRegistryReadOnly"
-                ),
-                iam.ManagedPolicy.from_aws_managed_policy_name("AmazonEKS_CNI_Policy"),
-                iam.ManagedPolicy.from_aws_managed_policy_name(
-                    "AmazonEKSVPCResourceController"
-                ),  # Allows us to use Security Groups for pods
-                iam.ManagedPolicy.from_aws_managed_policy_name(
-                    "AmazonSSMManagedInstanceCore"
-                ),
-            ],
+        # Map my user arn to the K8s system:master group in order to manage it via the AWS Console
+        self.eks_cluster.aws_auth.add_user_mapping(
+            user=iam.User.from_user_arn(
+                self, "user", self.node.try_get_context("user_arn")
+            ),
+            groups=["system:masters"],
+            username=self.node.try_get_context("user_name"),
         )
+
+        worker_role = aws_cdk.Fn.import_value("eks-worker-node-role")
 
         # Create Managed Worker Nodes
         # Node Release version seperated from control K8s version in order to update separately
         # AMI versions for worker nodes: https://docs.aws.amazon.com/eks/latest/userguide/eks-linux-ami-versions.html
+        # https://github.com/awslabs/amazon-eks-ami/releases
         node_capacity_type = eks.CapacityType.ON_DEMAND
         self.eks_node_group = self.eks_cluster.add_nodegroup_capacity(
             "cluster-default-ng",
@@ -110,8 +125,10 @@ class EKSStack(Stack):
             instance_types=[
                 ec2.InstanceType(self.node.try_get_context("eks_node_instance_type"))
             ],
-            release_version=self.node.try_get_context("eks_worker_ami_version"),
-            node_role=worker_role,
+            release_version=EKS_WORKER_AMI_VERSION,
+            node_role=iam.Role.from_role_arn(
+                self, "worker-node-role", role_arn=worker_role
+            ),
             tags=spring_cleaning_tags
             # release_version=self.node.try_get_context(
             #     "eks_node_ami_version")
@@ -232,7 +249,7 @@ class EKSStack(Stack):
         awslbcontroller_chart = self.eks_cluster.add_helm_chart(
             "aws-load-balancer-controller",
             chart="aws-load-balancer-controller",
-            version="1.4.0",
+            version=AWSLBCONTROLLER_VERSION,
             release="awslbcontroller",
             repository="https://aws.github.io/eks-charts",
             namespace="kube-system",
@@ -263,9 +280,13 @@ class EKSStack(Stack):
                 "autoscaling:DescribeAutoScalingGroups",
                 "autoscaling:DescribeAutoScalingInstances",
                 "autoscaling:DescribeLaunchConfigurations",
+                "autoscaling:DescribeScalingActivities",
                 "autoscaling:DescribeTags",
                 "autoscaling:SetDesiredCapacity",
                 "autoscaling:TerminateInstanceInAutoScalingGroup",
+                "eks:DescribeNodegroup",
+                "ec2:DescribeInstanceTypes",
+                "ec2:DescribeLaunchTemplateVersions",
             ],
             "Resource": "*",
         }
@@ -280,7 +301,7 @@ class EKSStack(Stack):
         clusterautoscaler_chart = self.eks_cluster.add_helm_chart(
             "cluster-autoscaler",
             chart="cluster-autoscaler",
-            version="9.11",
+            version=CLUSTER_AUTOSCALER_VERSION,
             release="clusterautoscaler",
             repository="https://kubernetes.github.io/autoscaler",
             namespace="kube-system",
@@ -304,7 +325,7 @@ class EKSStack(Stack):
         metricsserver_chart = self.eks_cluster.add_helm_chart(
             "metrics-server",
             chart="metrics-server",
-            version="3.8.2",
+            version=METRICS_SERVER_VERSION,
             release="metricsserver",
             repository="https://kubernetes-sigs.github.io/metrics-server/",
             namespace="kube-system",
@@ -369,7 +390,7 @@ class EKSStack(Stack):
         sg_pods_chart = self.eks_cluster.add_helm_chart(
             "aws-vpc-cni",
             chart="aws-vpc-cni",
-            version="1.1.14",
+            version=AWS_VPC_CNI_VERSION,
             release="aws-vpc-cni",
             repository="https://aws.github.io/eks-charts",
             namespace="kube-system",
@@ -456,6 +477,7 @@ class EKSStack(Stack):
 
         # # Install Flux
         flux_stack = FluxStack(self, "FluxStack", cluster=self.eks_cluster)
+        flux_stack.node.add_dependency(self.eks_cluster)
 
         # Get the manifest prepared in the flux stack
         flux_manifest_import = flux_stack.flux_manifest_yaml
