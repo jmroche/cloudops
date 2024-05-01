@@ -6,6 +6,7 @@ and get the compare the quotas for a set of services provided for the accounts p
 
 import boto3
 import click
+from operator import itemgetter
 
 
 # TODO: Complete Click arguments
@@ -17,7 +18,7 @@ import click
 @click.option(
     "--accounts", "-a",
     help="AWS Account profiles to use. By default only default profile will be used",
-    nargs=2,
+    nargs=1,
     type=str,
     required=True
 )
@@ -28,10 +29,22 @@ import click
     default=None,
     required=False
 )
-def cli(accounts):
-    click.echo(list(accounts))
 
-client = boto3.client("service-quotas")
+
+def cli(accounts, service):
+    splitted_accounts = accounts.split(",")
+    
+    if len(splitted_accounts) > 1:
+    
+        # click.echo(list(accounts))
+        click.echo(splitted_accounts)
+    else:
+        click.echo(splitted_accounts[0])
+        
+    # print(list_service_quotas(service))
+
+client = boto3.client("service-quotas", region_name="us-east-1")
+
 
 
 def list_services() -> list:
@@ -41,20 +54,25 @@ def list_services() -> list:
         List: Returns a list of dictionaries containing the Service Code and Service Name
         Example: {'ServiceCode': 'AWSCloudMap', 'ServiceName': 'AWS Cloud Map'}
     """
-    response = client.list_services(
-        MaxResults=100
-    )
+    paginator = client.get_paginator("list_services")
+    
+    services = []
+    for page in paginator.paginate():
+        services += page["Services"]
+    # response = client.list_services(
+    #     MaxResults=100
+    # )
 
-    services = response["Services"]
+    # services = response["Services"]
 
-    # print(len(services))
+    # # print(len(services))
 
-    while "NextToken" in response:
-        response = client.list_services(
-            MaxResults = 100,
-            NextToken = response["NextToken"]
-        )
-        services += response
+    # while "NextToken" in response:
+    #     response = client.list_services(
+    #         MaxResults = 100,
+    #         NextToken = response["NextToken"]
+    #     )
+    #     services += response
 
     # print(len(services))
 
@@ -74,30 +92,63 @@ def list_service_quotas(services: dict) -> list:
     """
     
     # Check the type of the input. If not str or list return an error
+    
+    paginator = client.get_paginator("list_service_quotas")
+    service_quotas = []
+    
+  
+    
+    for page in paginator.paginate(ServiceCode='ec2'):
+        service_quotas += page["Quotas"]
+        # print(page)
 
-    if isinstance(services, dict):
+    # if services:
 
-    # List service quotas for services
+    # # List service quotas for services
 
-        service_quotas_response = client.list_service_quotas(
-            ServiceCode=services["ServiceCode"],
-            MaxResults = 100
-        )
-        service_quotas = service_quotas_response["Quotas"]
-        print(len(service_quotas))
+    #     service_quotas_response = client.list_service_quotas(
+    #         # ServiceCode=services["ServiceCode"],
+    #         ServiceCode=services,
+    #         MaxResults = 100
+    #     )
+    #     service_quotas = service_quotas_response["Quotas"]
+    #     print(len(service_quotas))
 
-        while "NextToken" in service_quotas_response:
-            service_quotas_response = client.list_service_quotas(
-                ServiceCode = services["ServiceCode"],
-                MaxResults = 100,
-                NextToken = service_quotas_response["NextToken"]
-            )
+    #     while "NextToken" in service_quotas_response:
+    #         service_quotas_response = client.list_service_quotas(
+    #             # ServiceCode = services["ServiceCode"],
+    #             ServiceCode=services,
+    #             MaxResults = 100,
+    #             NextToken = service_quotas_response["NextToken"]
+    #         )
 
-            service_quotas += service_quotas_response
+    #         service_quotas += service_quotas_response
 
-        return service_quotas
-    else:
-        raise TypeError("The function only accepts a dictionary object as an argument.")
+    return service_quotas
+    # else:
+    #     raise TypeError("The function only accepts a dictionary object as an argument.")
+        
+
+quotas = list_service_quotas("ec2")
+print(type(quotas))
+for quota in sorted(quotas, key=itemgetter('QuotaName')):
+    print(f"Quota Name: {quota['QuotaName']}, Quota Code: {quota['QuotaCode']}, Value: {quota['Value']}")
+print(len(quotas))
+
+# print(quotas)
+
+# service_list = list_services()
+# # print(service_list)
+# print(f"Service List Type: {type(service_list)}")
+# print(f"Length Service List: {len(service_list)}")
+# print((f"First service in the list is {service_list[0]['ServiceCode']}"))
+
+# for index, item in enumerate(service_list):
+#     if item["ServiceCode"] == "ec2":
+#         print(f"EC2 Service Code found at index: {index}")
+#         print("X" * 30)
+        
+#     print(f"{index}: {item['ServiceCode']} - ")
 
 
 
@@ -105,4 +156,4 @@ if __name__ == '__main__':
     cli()
 
 
-        
+    

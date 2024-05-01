@@ -4,8 +4,6 @@
 Personal blog where I experiment and document with different cloud technologies and stacks.
 
 ###
-It's a work in progress, and here's what I'm working on and what I have working so far:
-
 
 
 * Blog MVP: The initial minimum viable product for the blog application. This is written in Python using Bootstrap and Flask.
@@ -39,9 +37,6 @@ It's a work in progress, and here's what I'm working on and what I have working 
     * On commits to the main branch the docker image will be built, tagged and pushed to the AWS Elastic Container Registry (ECR)
     * On commit Amazon CodeGuru will perform a code review to ensure no security issues are introduced and/or provide suggestions to make the code more effiicient.
     * On push to ECR, ECR will scan the images for vulnerabilities and alert of any vulnerabilities found
-
-### Still work in progress:
-
 * Flux GitOps Deployment Pipeline
 * Infrastructure Deployment Pipeline
 
