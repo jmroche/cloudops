@@ -85,8 +85,8 @@ Applies the lifecycle configuration to the specified bucket.
   - `bucket` (str): The name of the bucket to apply the configuration to
 - **Returns:**
   - `response` (dict): Dictionary containing information about the created lifecycle rule
-- **Known Issue:**
-  - In the current implementation, this function replaces all existing lifecycle rules with just the incomplete MPU rule. This means any other lifecycle rules previously configured on the bucket will be deleted.
+- **Note:**
+  - This function is used when a bucket has no existing lifecycle rules and creates a new configuration with the incomplete MPU rule.
 
 ### `get_incomplete_mpu_policy(bucket: str)`
 
@@ -96,7 +96,7 @@ Checks if a bucket has existing lifecycle rules, particularly for incomplete MPU
   - `bucket` (str): The name of the bucket to check and/or modify
 - **Behavior:**
   - If no lifecycle rules exist, creates an incomplete MPU rule
-  - If lifecycle rules exist but none for incomplete MPUs, adds one
+  - If lifecycle rules exist but none for incomplete MPUs, adds one while preserving existing rules
   - If an incomplete MPU rule already exists, does nothing
 
 ## Safety Features
@@ -109,19 +109,18 @@ Checks if a bucket has existing lifecycle rules, particularly for incomplete MPU
 ## Limitations
 
 - The script only adds a single lifecycle rule for incomplete MPUs
-- **Important:** The current implementation replaces all existing lifecycle rules when adding the incomplete MPU rule. This means any other lifecycle configurations on the bucket will be lost.
 - The script operates on one bucket at a time through interactive selection or can process all buckets at once
 
-## Recommended Fixes
+## Recent Improvements
 
-To preserve existing lifecycle rules when adding the incomplete MPU rule, the script should be modified to:
+The script has been updated to preserve existing lifecycle rules when adding the incomplete MPU rule:
 
-1. Retrieve the existing lifecycle rules (if any)
-2. Check if an incomplete MPU rule already exists
-3. If no incomplete MPU rule exists, add the new rule to the existing rules
-4. Apply the combined rules back to the bucket
+1. It retrieves the existing lifecycle rules (if any)
+2. Checks if an incomplete MPU rule already exists
+3. If no incomplete MPU rule exists, adds the new rule to the existing rules
+4. Applies the combined rules back to the bucket
 
-This would ensure that other lifecycle configurations are preserved while adding the incomplete MPU rule.
+This ensures that other lifecycle configurations are preserved while adding the incomplete MPU rule.
 
 ## Author
 
